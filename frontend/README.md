@@ -1,0 +1,3 @@
+# Blog Site 
+### Tech Stack used:
+#### Reactjs , MondoDB, Express, NodeJS , tailwindcss etc...

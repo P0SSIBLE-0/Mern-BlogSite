@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react'
 import {Navigate, useParams} from "react-router-dom";
 import Editor from '../components/Editor';
+import toast from 'react-hot-toast';
 
 export default function EditPage() {
   const [title, setTitle] = useState('');
@@ -39,8 +40,10 @@ export default function EditPage() {
       },
     })
     if(response.ok){
+      toast.success("Post has been uploaded!")
       setRedirect(true);
     }
+    toast.error("something went wrong! try again")
   }
 
   if(redirect){

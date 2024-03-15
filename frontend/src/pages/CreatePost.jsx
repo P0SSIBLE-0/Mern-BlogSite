@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {Navigate} from "react-router-dom";
 import Editor from "../components/Editor";
+import toast from "react-hot-toast";
 
 export default function CreatePost() {
   const [title, setTitle] = useState('');
@@ -28,6 +29,7 @@ export default function CreatePost() {
     })
     if(response.ok){
       setRedirect(true);
+      toast.success("Post has been created successfully")
     }
   }
   if(redirect){

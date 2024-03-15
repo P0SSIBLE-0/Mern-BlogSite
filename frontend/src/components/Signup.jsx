@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { UserContext } from "../userContext/UserContext";
 import { Navigate } from "react-router-dom";
 import {Eye, EyeOff} from "lucide-react" 
+import toast from "react-hot-toast";
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -25,9 +26,11 @@ export default function Signup() {
       if(response.ok){
         setUserInfo(data);
         setRedirect(true);
+        toast.success('User is now signed up.');
       }else{
         const errorData = await response.json();
         throw new Error(errorData.message || "Login failed");
+        toast.error('something went wrong!');
       }
     } catch (error) {
       // handle error

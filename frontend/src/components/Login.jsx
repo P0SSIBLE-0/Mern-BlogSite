@@ -2,6 +2,8 @@ import { useContext, useState } from "react";
 import { Navigate , Link} from "react-router-dom";
 import { Eye, EyeOff} from "lucide-react"
 import { UserContext } from "../userContext/UserContext";
+import toast from "react-hot-toast";
+
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -13,6 +15,10 @@ export default function Login() {
   const {setUserInfo} = useContext(UserContext);
   const login = async (e) => {
     e.preventDefault();
+    if(username == "" && password == ""){
+      toast("Please enter your username and password!")
+      return;
+    }
 
     const options = {
       method: "POST",
@@ -22,7 +28,6 @@ export default function Login() {
       },
       body: JSON.stringify({ username, password }),
     };
-
     try {
       const response = await fetch("http://localhost:3000/login", options);
 
@@ -31,13 +36,15 @@ export default function Login() {
         localStorage.setItem('token', data.token);
         setUserInfo(data);
         setRedirect(true);
+        toast.success('You are logined in!')
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message || "Login failed");
       }
     } catch (error) {
       console.error("Login error:", error);
-      alert("Login failed. Please check your credentials and try again.");
+      // alert("Login failed. Please check your credentials and try again.");
+      toast.error("Login failed. Please try again!")
     }
   };
   if (redirect) {

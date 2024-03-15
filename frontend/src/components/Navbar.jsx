@@ -2,6 +2,7 @@ import { useContext, useEffect } from "react";
 import { NavLink, Link, Navigate } from "react-router-dom";
 import { UserContext } from "../userContext/UserContext";
 import {PlusCircle} from 'lucide-react'
+import toast from "react-hot-toast";
 export default function Navbar() {
   const {setUserInfo, userInfo} = useContext(UserContext);
 
@@ -26,8 +27,10 @@ export default function Navbar() {
       }
       const profile = await response.json();
       if(response.ok) setUserInfo(profile);
+      
     } catch (error) {
       // console.error("Profile fetch error:", error);
+      toast.error("some error occurred while fetching profile")
     }
   }
   useEffect(() => {
@@ -42,6 +45,7 @@ export default function Navbar() {
       method: 'POST',
     })
     setUserInfo(null);
+    toast.success("User has logged out successfully.")
     return <Navigate to={'/'} />
   }
   return (

@@ -15,8 +15,8 @@ export default function Card({_id,title, summary, cover, createdAt, author}) {
   
   
   return (
-    <div className="flex min-w-[800px] max-w-2xl flex-col gap-2 items-center rounded-md md:flex-row mx-2 mb-4 md:mx-auto lg:m-auto lg:mb-4">
-      <div className="h-32 w-full md:h-[250px] md:w-[450px]">
+    <div className="flex max-w-[900px] flex-col gap-2 items-center rounded-md md:flex-row mx-2 mb-4 md:mx-6 lg:m-auto lg:mb-4">
+      <div className="h-[13.2rem] w-full md:h-[250px] md:w-[450px]">
         <Link to={`/post/${_id}`}>
           <img
             src={`http://localhost:3000/${cover}`}
@@ -25,8 +25,8 @@ export default function Card({_id,title, summary, cover, createdAt, author}) {
           />
         </Link>
       </div>
-      <div className='w-1/2'>
-        <div className="p-4 max-w-96">
+      <div className='w-full lg:w-1/2 md:w-1/2'>
+        <div className="p-4 w-full">
           <Link to={`/post/${_id}`}>
             <h1 className="inline-flex items-center text-lg font-semibold hover:underline">
               {title} <ArrowUpRight className="ml-2 h-4 w-4" />

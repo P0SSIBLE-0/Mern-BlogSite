@@ -20,6 +20,7 @@ export default function Card({_id,title, summary, cover, createdAt, author}) {
         <Link to={`/post/${_id}`}>
           <img
             src={`http://localhost:3000/${cover}`}
+            onError={(e) => e.target.src = `https://blog.kanalysis.com/wp-content/uploads/2023/01/placeholder-116.png`}
             alt="Laptop"
             className="h-full w-full object-cover"
           />

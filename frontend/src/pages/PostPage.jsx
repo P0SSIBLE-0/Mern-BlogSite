@@ -4,6 +4,7 @@ import { formatISO9075 } from "date-fns";
 import { UserContext } from "../userContext/UserContext";
 import Loading from '../components/Loader';
 import { Pencil , Trash} from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function PostPage() {
   const [postInfo, setPostInfo] = useState({});
@@ -44,13 +45,15 @@ export default function PostPage() {
       });
 
       if (response.ok) {
-        console.log("Post deleted successfully");
+        toast.success("Post deleted!")
         setRedirect(true)
       } else {
         console.error(`Failed to delete post. Status: ${response.status}`);
+        toast.error("something went wrong!")
       }
     } catch (error) {
       console.error("Error deleting post:", error);
+      toast.error("something went wrong!")
     }
   }
   if(redirect){
@@ -63,7 +66,7 @@ export default function PostPage() {
         <div className="p-4 ">
           <div className="flex justify-center flex-col items-center my-2">
             <div className="space-x-5 my-2 text-center">
-              <h1 className="text-4xl font-semibold my-2">{postInfo.title}</h1>
+              <h1 className="text-4xl font-bold my-2 mx-4 p-4">{postInfo.title}</h1>
               {postInfo?.createdAt && (
                 <span className="text-neutral-400">
                   {formatISO9075(new Date(postInfo.createdAt))}

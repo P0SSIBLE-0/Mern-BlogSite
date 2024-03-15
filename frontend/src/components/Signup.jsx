@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../userContext/UserContext";
 import { Navigate } from "react-router-dom";
-import {Eye, EyeOff} from "lucide-react" 
+import { Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function Signup() {
@@ -23,14 +23,14 @@ export default function Signup() {
     try {
       const response = await fetch("http://localhost:3000/signup", options);
       const data = await response.json();
-      if(response.ok){
+      if (response.ok) {
         setUserInfo(data);
         setRedirect(true);
-        toast.success('User is now signed up.');
-      }else{
+        toast.success("User is now signed up.");
+      } else {
         const errorData = await response.json();
         throw new Error(errorData.message || "Login failed");
-        toast.error('something went wrong!');
+        toast.error("something went wrong!");
       }
     } catch (error) {
       // handle error
@@ -42,10 +42,15 @@ export default function Signup() {
   }
   return (
     <form
-      className="flex flex-col items-center space-y-8 w-4/5 max-w-80 m-auto rounded-lg p-10 my-2 bg-white font-sans min-h-96 mt-20"
+      className="flex flex-col items-center space-y-8 w-4/5 max-w-80 m-auto rounded-lg p-10 my-2 bg-white min-h-96 mt-20 font-Montserrat"
       onSubmit={signup}
     >
-      <h1 className="text-3xl font-bold">Signup</h1>
+      <div className="text-center">
+        <h1 className="text-3xl font-bold font-Montserrat">Get Started</h1>
+        <span className="text-sm text-neutral-500">
+          Already have account? <a className="text-blue-500 font-semibold hover:underline" href="/login">Login</a>
+        </span>
+      </div>
       <input
         className="border-b border-gray-800 py-1 w-full outline-none placeholder:text-black bg-white focus:border-blue-700 text-sm placeholder:py-2"
         type="text"
@@ -75,7 +80,7 @@ export default function Signup() {
           className={`absolute right-2 top-1 font-semibold hover:text-blue-600 cursor-pointer `}
           onClick={() => setShowPassword(!showPassword)}
         >
-          {showPassword ? <Eye/>: <EyeOff/>}
+          {showPassword ? <Eye /> : <EyeOff />}
         </span>
       </div>
       <button className="py-2 px-2 w-full outline-2 bg-gray-800 text-white hover:bg-gray-900 hover:tracking-wider font-semibold rounded-xl my-6">

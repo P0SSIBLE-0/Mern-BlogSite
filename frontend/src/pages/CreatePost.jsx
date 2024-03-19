@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {Navigate} from "react-router-dom";
 import Editor from "../components/Editor";
 import toast from "react-hot-toast";
+import config from "../../config";
 
 export default function CreatePost() {
   const [title, setTitle] = useState('');
@@ -35,7 +36,7 @@ export default function CreatePost() {
     
     const token = localStorage.getItem("token");
     if(!token) return;
-    const response = await fetch('http://localhost:3000/post', {
+    const response = await fetch(`${config.server_url}/post`, {
       method: 'POST',
       body: data,
       headers: {
@@ -67,10 +68,9 @@ export default function CreatePost() {
        <div className="flex flex-wrap">
           {files && (
             <img
-              className="p-2 rounded-lg"
+              className="p-2 rounded-xl max-w-full max-h-full lg:w-120px  md:100px"
               src={previewUrl}
               alt="Selected"
-              style={{ maxWidth: "100%", maxHeight: "100px" }}
             />
           )}
           <input

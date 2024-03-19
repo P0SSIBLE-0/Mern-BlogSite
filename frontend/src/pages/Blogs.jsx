@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import  Post from '../components/Card';
 import Loading from '../components/Loader';
+import config from '../../config';
 export default function Blogs() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   async function getPosts() {
     try {
-      const response = await fetch('http://localhost:3000/posts');
+      const response = await fetch(`${config.server_url}/posts`);
       if (!response.ok) {
         throw new Error(`API request failed with status ${response.status}`);
       }

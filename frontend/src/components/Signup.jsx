@@ -3,6 +3,7 @@ import { UserContext } from "../userContext/UserContext";
 import { Navigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
+import config from "../../config";
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -21,7 +22,7 @@ export default function Signup() {
     };
 
     try {
-      const response = await fetch("http://localhost:3000/signup", options);
+      const response = await fetch(`${config.server_url}/signup`, options);
       const data = await response.json();
       if (response.ok) {
         setUserInfo(data);
@@ -30,10 +31,10 @@ export default function Signup() {
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message || "Login failed");
-        toast.error("something went wrong!");
       }
     } catch (error) {
       // handle error
+      toast.error("something went wrong!");
       console.error(error);
     }
   };

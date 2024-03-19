@@ -5,7 +5,7 @@ export const UserContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 export function UserContextProvider({children}){
-const [userInfo, setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
 
 
   return (

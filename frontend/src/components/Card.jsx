@@ -1,6 +1,7 @@
 import { ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom' 
 import {format} from 'date-fns';
+import config from '../../config';
 
 export default function Card({_id,title, summary, cover, createdAt, author}) {
   function truncateString(inputString) {
@@ -13,13 +14,12 @@ export default function Card({_id,title, summary, cover, createdAt, author}) {
     return truncatedString;
   }
   
-  
   return (
     <div className="flex max-w-[900px] flex-col gap-2 items-center rounded-md md:flex-row mx-2 mb-4 md:mx-6 lg:m-auto lg:mb-4">
       <div className="h-[13.2rem] w-full md:h-[250px] md:w-[450px]">
         <Link to={`/post/${_id}`}>
           <img
-            src={`http://localhost:3000/${cover}`}
+            src={`${config.server_url}/${cover}`}
             onError={(e) => e.target.src = `https://blog.kanalysis.com/wp-content/uploads/2023/01/placeholder-116.png`}
             alt="Laptop"
             className="h-full w-full object-cover"

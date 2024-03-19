@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import Editor from "../components/Editor";
 import toast from "react-hot-toast";
+import config from "../../config";
 
 export default function EditPage() {
   const [title, setTitle] = useState("");
@@ -27,7 +28,7 @@ export default function EditPage() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:3000/post/" + id).then((response) => {
+    fetch(`${config.server_url}/post/${id}`).then((response) => {
       response.json().then((data) => {
         setTitle(data.title);
         setSummary(data.summary);
@@ -49,7 +50,7 @@ export default function EditPage() {
     }
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch("http://localhost:3000/post", {
+      const response = await fetch(`${config.server_url}/post`, {
         method: "PUT",
         body: data,
         headers: {

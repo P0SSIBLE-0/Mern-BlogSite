@@ -1,7 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import Home from './pages/Home.jsx';
+// import Home from './pages/Home.jsx';
+import App from './App.jsx';
 import Blog from './pages/Blogs.jsx';
 import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx';
@@ -13,7 +14,6 @@ import { UserContextProvider } from './userContext/UserContext.jsx';
 import CreatePost from './pages/CreatePost.jsx';
 import PostPage from './pages/PostPage.jsx';
 import EditPage from './pages/EditPage.jsx';
-import Loader from './components/Loader.jsx'
 import NotFound from './pages/NotFound.jsx';
 
 
@@ -21,7 +21,7 @@ import NotFound from './pages/NotFound.jsx';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home/>,
+    element: <App/>,
     errorElement: <NotFound/>,
     children: [
       {

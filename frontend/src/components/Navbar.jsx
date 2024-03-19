@@ -3,6 +3,7 @@ import { NavLink, Link, Navigate } from "react-router-dom";
 import { UserContext } from "../userContext/UserContext";
 import {PlusCircle} from 'lucide-react'
 import toast from "react-hot-toast";
+import config from "../../config";
 export default function Navbar() {
   const {setUserInfo, userInfo} = useContext(UserContext);
 
@@ -13,7 +14,7 @@ export default function Navbar() {
       return;
     }
     try {
-      const response = await fetch("http://localhost:3000/profile", {
+      const response = await fetch(`${config.server_url}/profile`, {
         credentials: "include",
         headers: {
           Authorization: `${token}`, // Send token in header
@@ -40,7 +41,7 @@ export default function Navbar() {
   const logout = () => {
     localStorage.removeItem('token');
     setUserInfo(null)
-    fetch('http://localhost:3000/logout',{
+    fetch(`${config.server_url}/logout`,{
       credentials: 'include',
       method: 'POST',
     })

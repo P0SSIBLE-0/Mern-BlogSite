@@ -3,6 +3,7 @@ import { Navigate , Link} from "react-router-dom";
 import { Eye, EyeOff} from "lucide-react"
 import { UserContext } from "../userContext/UserContext";
 import toast from "react-hot-toast";
+import config from "../../config";
 
 
 export default function Login() {
@@ -29,7 +30,7 @@ export default function Login() {
       body: JSON.stringify({ username, password }),
     };
     try {
-      const response = await fetch("http://localhost:3000/login", options);
+      const response = await fetch(`${config.server_url}/login`, options);
 
       if (response.ok) {
         const data = await response.json();

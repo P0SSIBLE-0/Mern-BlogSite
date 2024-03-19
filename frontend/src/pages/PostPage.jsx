@@ -5,6 +5,7 @@ import { UserContext } from "../userContext/UserContext";
 import Loading from '../components/Loader';
 import { Pencil , Trash} from "lucide-react";
 import toast from "react-hot-toast";
+import config from "../../config";
 
 export default function PostPage() {
   const [postInfo, setPostInfo] = useState({});
@@ -17,7 +18,7 @@ export default function PostPage() {
     // get the current post data 
     const fetchPost = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/post/${id}`);
+        const response = await fetch(`${config.server_url}/post/${id}`);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -37,7 +38,7 @@ export default function PostPage() {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch(`http://localhost:3000/post/${id}`, {
+      const response = await fetch(`${config.server_url}/post/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `${token}`,
@@ -98,7 +99,7 @@ export default function PostPage() {
           </div>
           <img
             className="rounded my-4 m-auto w-full"
-            src={`http://localhost:3000/${postInfo.cover}`}
+            src={`${config.server_url}/${postInfo.cover}`}
             alt=""
           />
           <div className="w-full p-2 m-auto">

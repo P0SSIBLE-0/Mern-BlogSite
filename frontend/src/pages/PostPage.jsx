@@ -99,7 +99,7 @@ export default function PostPage() {
           </div>
           <img
             className="rounded my-4 m-auto w-full"
-            src={`${config.server_url}/${postInfo.cover}`}
+            src={`${postInfo.cover}`}
             alt=""
           />
           <div className="w-full p-2 m-auto">

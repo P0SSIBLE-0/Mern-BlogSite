@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const PostModel = require('../models/post.model');
+const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 
 // function to create a new User instance or signup 
@@ -46,27 +47,61 @@ async function loginUser(req,res){
 
 }
 
-// upload fuction using multer
-const uploadFile = async(req, res) =>{
-  const {originalname, path} = req.file;
-  const nameArray = originalname.split('.'); // making subparts of name 
-  const ext = nameArray[nameArray.length - 1]; // get extension of a image
-  const newPath = path + '.' + ext;  
-  fs.renameSync(path, newPath); 
 
-  const {title, summary, content} = req.body;
-  const token  = req.headers.authorization;
-  const userData = await jwt.verify(token, process.env.SECRET_KEY);
-  const newPost = new PostModel({
-    title,
-    summary,
-    content,
-    cover: newPath,
-    author: userData.id,
-  })
-  await newPost.save();
-  res.status(200).json(userData);
-}
+// Configure Cloudinary with your credentials (replace with your actual values)     
+cloudinary.config({ 
+  cloud_name: 'dla9vbhdk', 
+  api_key: '773461935487564', 
+  api_secret: 'zvlNLuw72IB_0DSoUpj9urn76Fg' 
+});
+
+// Configure Multer storage using Cloudinary storage engine
+const cloudinaryStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'temp/'); // Temporary folder for uploaded files on server (optional)
+  },
+  filename: (req, file, cb) => {
+    const filename = `${Date.now()}-${file.originalname}`;
+    cb(null, filename);
+  },
+});
+
+const upload = multer({ storage: cloudinaryStorage });
+
+const uploadFile = async (req, res) => {
+  const localFilePath = req.file.path;
+  try {
+    // Upload the image to Cloudinary
+    const result = await cloudinary.uploader.upload(localFilePath, {
+      resource_type: 'auto', // Automatically detect image format
+      folder: 'Blog-images', // Specify a folder in Cloudinary to store images
+      overwrite: false, // Prevent overwriting existing files with the same name
+    });
+
+    const { title, summary, content } = req.body;
+    const token = req.headers.authorization;
+    const userData = await jwt.verify(token, process.env.SECRET_KEY);
+
+    const newPost = new PostModel({
+      title,
+      summary,
+      content,
+      cover: result.secure_url, // Use Cloudinary's secure URL for the image
+      author: userData.id,
+    });
+
+    await newPost.save();
+    res.status(200).json(userData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error uploading image' });
+  } finally {
+    fs.unlinkSync(localFilePath); // clean up temporary files
+  }
+};
+
+
+
 // function to getting all posts
 const getAllPosts = async(req, res) => {
   const posts = await PostModel.find()
@@ -91,15 +126,15 @@ const getPost = async(req, res) =>{
 
 // function to update a post
 async function updatePost(req, res) {
+  const localFilePath = req.file.path;
   try {
-    let newPath = null;
-    if (req.file) {
-      const { originalname, path } = req.file;
-      const nameArray = originalname.split('.');
-      const ext = nameArray[nameArray.length - 1];
-      newPath = path + '.' + ext;
-      fs.renameSync(path, newPath);
-    }
+    // Upload the image to Cloudinary
+    const result = await cloudinary.uploader.upload(localFilePath, {
+      resource_type: 'auto', // Automatically detect image format
+      folder: 'Blog-images', // Specify a folder in Cloudinary to store images
+      overwrite: false, // Prevent overwriting existing files with the same name
+    });
+
 
     const token = req.headers.authorization;
     const { title, summary, content, id } = req.body;
@@ -119,7 +154,7 @@ async function updatePost(req, res) {
       title,
       summary,
       content,
-      cover: newPath ? newPath : postData.cover,
+      cover: result.secure_url,
       author: userData.id,
     };
 
@@ -137,6 +172,8 @@ async function updatePost(req, res) {
   } catch (error) {
     console.error('Error updating post:', error);
     res.status(500).json('Internal Server Error');
+  } finally {
+    fs.unlinkSync(localFilePath);
   }
 }
 

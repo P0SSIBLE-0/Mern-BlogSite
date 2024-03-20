@@ -67,6 +67,9 @@ const uploadFile = async (req, res) => {
       return res.status(400).json({ message: 'No file uploaded' });
     }
     const localFilePath = req.file?.buffer;
+    if(!localFilePath) {
+      return res.status(400).json('No image file uploaded');
+    }
     const { title, summary, content } = req.body;
     const token = req.headers.authorization;
     // Verify JWT token
@@ -78,7 +81,7 @@ const uploadFile = async (req, res) => {
     // Upload the image to Cloudinary
     let result;
     if (localFilePath) {
-      result = await cloudinary.uploader.upload(localFilePath, {
+      result = await cloudinary.uploader.upload(req.file.buffer, {
         resource_type: 'auto',
         folder: 'Blog-images',
         overwrite: false,
@@ -130,9 +133,7 @@ const getPost = async (req, res) => {
 // function to update a post
 async function updatePost(req, res) {
   const localFilePath = req.file?.buffer;
-  if(!localFilePath) {
-    return res.status(400).json('No image file uploaded');
-  }
+  
   try {
     // Upload the image to Cloudinary
     const result = await cloudinary.uploader.upload(localFilePath, {

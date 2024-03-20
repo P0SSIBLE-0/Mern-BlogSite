@@ -40,7 +40,7 @@ export default function Login() {
         setRedirect(true);
         toast.success('You are logined in!')
       } else {
-        // login failed!
+        // login failed
         const errorData = await response.json();
         throw new Error(errorData.message || "Login failed");
       }

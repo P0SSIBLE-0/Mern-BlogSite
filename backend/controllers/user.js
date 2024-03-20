@@ -59,19 +59,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET_KEY
 });
 
-// Configure Multer storage using Cloudinary storage engine
-// const cloudinaryStorage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, 'temp/'); // Temporary folder for uploaded files on server (optional)
-//   },
-//   filename: (req, file, cb) => {
-//     const filename = `${Date.now()}-${file.originalname}`;
-//     cb(null, filename);
-//   },
-// });
-
-// const upload = multer({ storage: cloudinaryStorage });
-const upload = multer({ storage: multer.memoryStorage() });// for deployment only vercel to avoid serverless crash
 
 const uploadFile = async (req, res) => {
   const localFilePath = req.file.buffer;

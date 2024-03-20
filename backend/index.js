@@ -18,7 +18,20 @@ require('dotenv').config();
 const multer = require('multer');
 const PostModel = require('./models/post.model');
 // const uploadMiddleware = multer({ dest: 'uploads/' })
-const uploadMiddleware = multer({ storage: multer.memoryStorage() });
+
+// Configure Multer storage using Cloudinary storage engine
+// const cloudinaryStorage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, 'temp/'); // Temporary folder for uploaded files on server (optional)
+//   },
+//   filename: (req, file, cb) => {
+//     const filename = `${Date.now()}-${file.originalname}`;
+//     cb(null, filename);
+//   },
+// });
+
+// const upload = multer({ storage: cloudinaryStorage });
+const uploadMiddleware = multer({ storage: multer.memoryStorage() });// for deployment only vercel to avoid serverless crash
 
 
 const PORT =  3000;
@@ -29,6 +42,7 @@ app.use(cors({
   credentials: true,
   origin: 'https://snazzy-marigold-b8e5c3.netlify.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 app.get('/post/:id', async(req, res) => {

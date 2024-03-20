@@ -32,7 +32,7 @@ const PostModel = require('./models/post.model');
 // const upload = multer({ storage: cloudinaryStorage });
 const uploadMiddleware = multer({ storage: multer.memoryStorage() });// for deployment only vercel to avoid serverless crash
 
-
+app.options('*', cors())
 const PORT =  3000;
 // middleware
 app.use(express.json());  

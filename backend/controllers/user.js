@@ -177,7 +177,7 @@ async function updatePost(req, res) {
     res.status(200).json('Post updated successfully');
   } catch (error) {
     console.error('Error updating post:', error);
-    res.status(500).json('Internal Server Error...');
+    res.status(500).json('Internal Server Error...', error.message);
   } finally {
     // fs.unlinkSync(localFilePath);
   }

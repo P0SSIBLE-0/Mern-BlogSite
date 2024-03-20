@@ -56,7 +56,6 @@ export default function EditPage() {
         method: "PUT",
         body: data,
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `${token}`, // Send token in header
         },
       });

@@ -11,6 +11,7 @@ export default function EditPage() {
   const [files, setFiles] = useState("");
   const [redirect, setRedirect] = useState(false);
   const { id } = useParams();
+  const [loading , setLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState("");
 
   // Function to handle image selection
@@ -41,6 +42,7 @@ export default function EditPage() {
   async function updatePost(e) {
     e.preventDefault();
     const data = new FormData();
+    setLoading(true);
     data.set("title", title);
     data.set("summary", summary);
     data.set("content", content);
@@ -58,10 +60,12 @@ export default function EditPage() {
         },
       });
       if (response.ok) {
+        setLoading(false);
         toast.success("Post has been uploaded!");
         setRedirect(true);
       }
     } catch (err) {
+      setLoading(false);
       toast.error("something went wrong! try again");
     }
   }
@@ -86,24 +90,27 @@ export default function EditPage() {
         onChange={(ev) => setSummary(ev.target.value)}
       />
       <div>
-        <div className="flex flex-wrap">
-          {previewUrl && (
-            <img
-              className="p-2 rounded-lg"
-              src={`${previewUrl}`}
-              alt="Selected"
-              style={{ maxWidth: "100%", maxHeight: "130px" }}
+        <div className="">
+          <div className="flex flex-wrap">
+            {previewUrl && (
+              <img
+                className="p-2 rounded-lg"
+                src={`${previewUrl}`}
+                alt="Selected"
+                style={{ maxWidth: "100%", maxHeight: "130px" }}
+              />
+            )}
+            <input
+              className="p-2 my-3 border-2 border-neutral-400 rounded"
+              type="file"
+              onChange={handleImageChange}
             />
-          )}
-          <input
-            className="p-2 my-3 border-2 border-neutral-400 rounded"
-            type="file"
-            onChange={handleImageChange}
-          />
+          </div>
+          <span className="p-2 my-2 text-sm text-red-400" >Image size should be under 4.5Mb</span>
         </div>
       </div>
       <Editor value={content} onChange={setContent} />
-      <button className="p-2 font-semibold bg-slate-500 text-white my-4 w-32 rounded hover:bg-slate-800">
+      <button className="p-2 font-semibold bg-slate-500 text-white my-4 w-32 rounded hover:bg-slate-800 text-center inline-flex justify-center"><img className={`size-6 ${loading?'block': 'hidden'}`} src="https://i.gifer.com/ZKZg.gif" alt="" />
         Update Post
       </button>
     </form>

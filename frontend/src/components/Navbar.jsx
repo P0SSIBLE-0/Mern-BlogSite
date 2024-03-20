@@ -50,13 +50,13 @@ export default function Navbar() {
   }
   return (
       <header className="flex justify-between p-4 items-center sticky top-0 backdrop-blur-sm">
-        <NavLink to="/" className="text-2xl lg:text-3xl font-mono font-extrabold text-[#080fe8]">
+        <NavLink to="/" className="text-2xl lg:text-3xl font-Montserrat font-bold text-[#080fe8]">
           Perspective
         </NavLink>
         {userInfo && (
           <>
           <div className="flex font-semibold space-x-3">
-            <Link className="hover:underline hover:text-blue-600 flex" to="/create"><PlusCircle className="mx-2" /> Create New Post</Link>
+            <Link className="hover:underline hover:text-blue-600 flex" to="/create"><PlusCircle className="mx-2" />New Post</Link>
             <div className="hover:underline hover:text-blue-600">
             <a href=""
             onClick={logout} 

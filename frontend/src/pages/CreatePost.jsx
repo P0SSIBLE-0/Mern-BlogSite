@@ -11,6 +11,7 @@ export default function CreatePost() {
   const [files, setFiles] = useState('');
   const [redirect , setRedirect] = useState(false);
   const [previewUrl, setPreviewUrl] = useState('');
+  const [loading , setLoading] = useState(false)
 
   // Function to handle image selection
   const handleImageChange = (event) => {
@@ -34,6 +35,7 @@ export default function CreatePost() {
     data.set('content', content);
     data.set('file', files[0]); 
     
+    setLoading(true);
     const token = localStorage.getItem("token");
     if(!token) return;
     const response = await fetch(`${config.server_url}/post`, {
@@ -44,6 +46,7 @@ export default function CreatePost() {
       },
     })
     if(response.ok){
+      setLoading(false);
       setRedirect(true);
       toast.success("Post has been created successfully")
     }
@@ -78,9 +81,10 @@ export default function CreatePost() {
             type="file"
             onChange={handleImageChange}
           />
+          <span className="p-2 lg:my-2 text-sm text-red-400" >Image size should be under 4.5Mb</span>
         </div>
       <Editor value={content} onChange={setContent}/>
-      <button className="p-2 font-semibold bg-slate-500 text-white my-4 w-32 rounded hover:bg-slate-800">Create Post</button>
+      <button className="p-2 font-semibold bg-slate-500 text-white my-4 w-40 rounded hover:bg-slate-800 inline-flex gap-2 text-center justify-center"> <img className={`size-6 ${loading?'block': 'hidden'}`} src="https://i.gifer.com/ZKZg.gif" alt="" />Create Post</button>
     </form>
   );
 }

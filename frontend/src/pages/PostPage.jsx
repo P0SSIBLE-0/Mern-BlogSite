@@ -64,10 +64,10 @@ export default function PostPage() {
   return (
     <> { loading ? <Loading/> : (
       <div>
-        <div className="p-4 ">
+        <div className="p-4 font-Montserrat">
           <div className="flex justify-center flex-col items-center my-2">
             <div className="space-x-5 my-2 text-center">
-              <h1 className="text-4xl font-bold my-2 mx-4 p-4">{postInfo.title}</h1>
+              <h1 className="text-4xl font-Montserrat font-bold my-2 mx-4 p-4">{postInfo.title}</h1>
               {postInfo?.createdAt && (
                 <span className="text-neutral-400">
                   {formatISO9075(new Date(postInfo.createdAt))}

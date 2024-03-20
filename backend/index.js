@@ -36,14 +36,13 @@ app.options('*', cors())
 const PORT =  3000;
 // middleware
 app.use(express.json());  
-// app.use((req, res, next) => {
-//   res.setHeader('Access-Control-Allow-Origin', 'https://mern-blog-site-liart.vercel.app');
-//   res.setHeader('Access-Control-Allow-Methods', '*');
-//   res.setHeader('Access-Control-Allow-Headers', '*');
-//   res.setHeader('Access-Control-Allow-Credentials', 'true');
-//   next();
-// });
-
+app.options('/post', (req, res) => {
+  res.header('Access-Control-Allow-Origin', 'https://snazzy-marigold-b8e5c3.netlify.app');
+  res.header('Access-Control-Allow-Methods', 'PUT', 'GET', 'POST'); 
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.status(200).send();
+});
 
 app.use(cors());
 
@@ -79,7 +78,7 @@ app.get('/profile', (req, res) => {
 
 
 app.post('/post',uploadMiddleware.single('file'), uploadFile);
-app.put('/post',cors() ,uploadMiddleware.single('file'), updatePost );
+app.put('/post',uploadMiddleware.single('file'), updatePost );
 app.delete('/post/:id', deletePost);
 
 // connecting to database with mongoose

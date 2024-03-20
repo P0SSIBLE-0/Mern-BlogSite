@@ -33,12 +33,14 @@ export default function Login() {
       const response = await fetch(`${config.server_url}/login`, options);
 
       if (response.ok) {
+        // login success
         const data = await response.json();
         localStorage.setItem('token', data.token);
         setUserInfo(data);
         setRedirect(true);
         toast.success('You are logined in!')
       } else {
+        // login failed!
         const errorData = await response.json();
         throw new Error(errorData.message || "Login failed");
       }

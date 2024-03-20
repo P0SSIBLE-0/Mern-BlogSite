@@ -69,7 +69,7 @@ const uploadFile = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
-    const localFilePath = req.file?.path;
+    const localFilePath = req.file?.buffer;
     if(!localFilePath) {
       return res.status(400).json('No image file uploaded');
     }
@@ -84,7 +84,7 @@ const uploadFile = async (req, res) => {
     // Upload the image to Cloudinary
     let result;
     if (localFilePath) {
-      result = await cloudinary.uploader.upload(req.file.path, {
+      result = await cloudinary.uploader.upload(localFilePath, {
         resource_type: 'auto',
         folder: 'Blog-images',
         overwrite: false,
@@ -180,7 +180,7 @@ async function updatePost(req, res) {
     res.status(200).json('Post updated successfully');
   } catch (error) {
     console.error('Error updating post:', error);
-    res.status(500).json('Internal Server Error...', error.message);
+    res.status(500).json({'error: ':error.message});
   } finally {
     // fs.unlinkSync(localFilePath);
   }

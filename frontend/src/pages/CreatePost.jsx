@@ -41,7 +41,6 @@ export default function CreatePost() {
       if(!token) return;
       const response = await fetch(`${config.server_url}/post`, {
         method: 'POST',
-        mode: 'no-cors', 
         body: data,
         headers: {
           'Content-Type': 'application/json',

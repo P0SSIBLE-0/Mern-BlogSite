@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import config from './config'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -8,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/post': {
-        target: config.server_url,
+        target: 'https://mern-blog-site-api.vercel.app',
         changeOrigin: true,
       },
     },

@@ -66,10 +66,9 @@ const uploadFile = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
-    const localFilePath = req.file.buffer;
+    const localFilePath = req.file?.buffer;
     const { title, summary, content } = req.body;
     const token = req.headers.authorization;
-
     // Verify JWT token
     const userData = await jwt.verify(token, process.env.SECRET_KEY);
     if (!userData) {
@@ -77,11 +76,14 @@ const uploadFile = async (req, res) => {
     }
 
     // Upload the image to Cloudinary
-    const result = await cloudinary.uploader.upload(localFilePath, {
-      resource_type: 'auto',
-      folder: 'Blog-images',
-      overwrite: false,
-    });
+    let result;
+    if (localFilePath) {
+      result = await cloudinary.uploader.upload(localFilePath, {
+        resource_type: 'auto',
+        folder: 'Blog-images',
+        overwrite: false,
+      });
+    }
     // Create new post
     const newPost = new PostModel({
       title,
@@ -131,9 +133,9 @@ async function updatePost(req, res) {
   try {
     // Upload the image to Cloudinary
     const result = await cloudinary.uploader.upload(localFilePath, {
-      resource_type: 'auto', // Automatically detect image format
-      folder: 'Blog-images', // Specify a folder in Cloudinary to store images
-      overwrite: false, // Prevent overwriting existing files with the same name
+      resource_type: 'auto', 
+      folder: 'Blog-images', 
+      overwrite: false,
     });
 
 
@@ -171,7 +173,7 @@ async function updatePost(req, res) {
     res.status(200).json('Post updated successfully');
   } catch (error) {
     console.error('Error updating post:', error);
-    res.status(500).json('Internal Server Error');
+    res.status(500).json('Internal Server Error...');
   } finally {
     // fs.unlinkSync(localFilePath);
   }

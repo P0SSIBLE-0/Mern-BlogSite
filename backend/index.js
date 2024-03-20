@@ -30,7 +30,7 @@ const PostModel = require('./models/post.model');
 // });
 
 // const upload = multer({ storage: cloudinaryStorage });
-const uploadMiddleware = multer({ storage: multer.memoryStorage() });// for deployment only vercel to avoid serverless crash
+const uploadMiddleware = multer({ storage: multer.memoryStorage()});// for deployment only vercel to avoid serverless crash
 
 const PORT =  3000;
 // middleware

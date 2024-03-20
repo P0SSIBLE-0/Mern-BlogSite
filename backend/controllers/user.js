@@ -159,6 +159,9 @@ async function updatePost(req, res) {
     if (!updatedPost) {
       return res.status(404).json('Post not found or you are not the author');
     }
+    res.setHeader('Access-Control-Allow-Origin', 'https://mern-blog-site-liart.vercel.app');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.status(200).json('Post updated successfully');
   } catch (error) {
     console.error('Error updating post:', error);

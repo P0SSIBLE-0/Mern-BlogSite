@@ -32,20 +32,11 @@ const PostModel = require('./models/post.model');
 // const upload = multer({ storage: cloudinaryStorage });
 const uploadMiddleware = multer({ storage: multer.memoryStorage() });// for deployment only vercel to avoid serverless crash
 
-app.options('*', cors())
 const PORT =  3000;
 // middleware
 app.use(express.json());  
-app.options('/post', (req, res) => {
-  res.header('Access-Control-Allow-Origin', 'https://snazzy-marigold-b8e5c3.netlify.app');
-  res.header('Access-Control-Allow-Methods', 'PUT', 'GET', 'POST'); 
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.status(200).send();
-});
-
 app.use(cors({
-  origin: '*', // Allow requests from all origins
+  origin: 'https://mern-blog-site-liart.vercel.app',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],

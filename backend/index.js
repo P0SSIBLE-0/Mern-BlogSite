@@ -79,7 +79,7 @@ app.get('/profile', (req, res) => {
 
 
 app.post('/post',uploadMiddleware.single('file'), uploadFile);
-app.put('/post',uploadMiddleware.single('file'), updatePost );
+app.put('/post',cors() ,uploadMiddleware.single('file'), updatePost );
 app.delete('/post/:id', deletePost);
 
 // connecting to database with mongoose

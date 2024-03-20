@@ -34,22 +34,28 @@ export default function CreatePost() {
     data.set('summary', summary);
     data.set('content', content);
     data.set('file', files[0]); 
-    
-    setLoading(true);
-    const token = localStorage.getItem("token");
-    if(!token) return;
-    const response = await fetch(`${config.server_url}/post`, {
-      method: 'POST',
-      body: data,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `${token}`,
-      },
-    })
-    if(response.ok){
-      setLoading(false);
-      setRedirect(true);
-      toast.success("Post has been created successfully")
+    try{
+
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      if(!token) return;
+      const response = await fetch(`${config.server_url}/post`, {
+        method: 'POST',
+        mode: 'no-cors', 
+        body: data,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${token}`,
+        },
+      })
+      if(response.ok){
+        setLoading(false);
+        setRedirect(true);
+        toast.success("Post has been created successfully")
+      }
+    } catch(error){
+      console.error(error);
+      toast.error("something went wrong!")
     }
   }
   if(redirect){

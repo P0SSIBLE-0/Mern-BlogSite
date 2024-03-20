@@ -61,34 +61,43 @@ cloudinary.config({
 
 
 const uploadFile = async (req, res) => {
-  const localFilePath = req.file.buffer;
   try {
-    // Upload the image to Cloudinary
-    const result = await cloudinary.uploader.upload(localFilePath, {
-      resource_type: 'auto', // Automatically detect image format
-      folder: 'Blog-images', // Specify a folder in Cloudinary to store images
-      overwrite: false, // Prevent overwriting existing files with the same name
-    });
-
+    // Ensure file is uploaded and available in req.file
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+    const localFilePath = req.file.buffer;
     const { title, summary, content } = req.body;
     const token = req.headers.authorization;
-    const userData = await jwt.verify(token, process.env.SECRET_KEY);
 
+    // Verify JWT token
+    const userData = await jwt.verify(token, process.env.SECRET_KEY);
+    if (!userData) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    // Upload the image to Cloudinary
+    const result = await cloudinary.uploader.upload(localFilePath, {
+      resource_type: 'auto',
+      folder: 'Blog-images',
+      overwrite: false,
+    });
+    // Create new post
     const newPost = new PostModel({
       title,
       summary,
       content,
-      cover: result.secure_url, // Use Cloudinary's secure URL for the image
+      cover: result.secure_url,
       author: userData.id,
     });
-
     await newPost.save();
-    res.status(200).json(userData);
+    res.status(200).json({ message: 'Post created successfully', post: newPost });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error uploading image' });
   } finally {
-    // fs.unlinkSync(localFilePath); // clean up temporary files
+    // Clean up temporary files if needed
+    // fs.unlinkSync(localFilePath);
   }
 };
 

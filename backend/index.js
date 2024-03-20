@@ -41,7 +41,6 @@ app.use(cookieParser());
 app.use(cors({
   origin: 'https://snazzy-marigold-b8e5c3.netlify.app', 
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers (adjust as needed)
 }));
 
 app.get('/post/:id', async(req, res) => {

@@ -19,18 +19,18 @@ const PostModel = require('./models/post.model');
 // const uploadMiddleware = multer({ dest: 'uploads/' })
 
 // Configure Multer storage using Cloudinary storage engine
-const cloudinaryStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, './uploads'); // Temporary folder for uploaded files on server (optional)
-  },
-  filename: (req, file, cb) => {
-    const filename = `${Date.now()}-${file.originalname}`;
-    cb(null, filename);
-  },
-});
+// const cloudinaryStorage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, './uploads'); // Temporary folder for uploaded files on server (optional)
+//   },
+//   filename: (req, file, cb) => {
+//     const filename = `${Date.now()}-${file.originalname}`;
+//     cb(null, filename);
+//   },
+// });
 
-const uploadMiddleware = multer({ storage: cloudinaryStorage });
-// const uploadMiddleware = multer({ storage: multer.memoryStorage()});// for deployment only vercel to avoid serverless crash
+// const uploadMiddleware = multer({ storage: cloudinaryStorage });
+const uploadMiddleware = multer({ storage: multer.memoryStorage()});// for deployment only vercel to avoid serverless crash
 
 const PORT =  3000;
 // middleware

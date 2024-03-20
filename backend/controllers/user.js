@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const PostModel = require('../models/post.model');
 const cloudinary = require('cloudinary').v2;
+const streamifier = require('streamifier');
 
 // function to create a new User instance or signup 
 async function createUser(req, res) {
@@ -132,15 +133,29 @@ const getPost = async (req, res) => {
 
 // function to update a post
 async function updatePost(req, res) {
-  const localFilePath = req.file.file;
-  
   try {
+    const fileStream = streamifier.createReadStream(req.file.buffer);
+
     // Upload the image to Cloudinary
-    const result = await cloudinary.uploader.upload(localFilePath, {
-      resource_type: 'auto', 
-      folder: 'Blog-images', 
-      overwrite: false,
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: 'auto',
+          folder: 'Blog-images',
+          overwrite: false,
+        },
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+
+      fileStream.pipe(uploadStream);
     });
+
 
 
     const token = req.headers.authorization;

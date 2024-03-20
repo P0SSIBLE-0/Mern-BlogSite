@@ -5,10 +5,6 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const PostModel = require('../models/post.model');
 const cloudinary = require('cloudinary').v2;
-const streamifier = require('streamifier');
-
-
-const upload = multer({ storage: multer.memoryStorage() });
 
 // function to create a new User instance or signup 
 async function createUser(req, res) {
@@ -70,7 +66,7 @@ const uploadFile = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
-    const localFilePath = req.file.buffer;
+    const localFilePath = req.file.file;
     if(!localFilePath) {
       return res.status(400).json('No image file uploaded');
     }
@@ -85,7 +81,7 @@ const uploadFile = async (req, res) => {
     // Upload the image to Cloudinary
     let result;
     if (localFilePath) {
-      result = await cloudinary.uploader.upload_stream(localFilePath, {
+      result = await cloudinary.uploader.upload(localFilePath, {
         resource_type: 'auto',
         folder: 'Blog-images',
         overwrite: false,
@@ -136,16 +132,15 @@ const getPost = async (req, res) => {
 
 // function to update a post
 async function updatePost(req, res) {
-  const localFilePath = streamifier.createReadStream(req.file.buffer);
+  const localFilePath = req.file.file;
   
   try {
     // Upload the image to Cloudinary
-    const result = await cloudinary.uploader.upload_stream(localFilePath, {
+    const result = await cloudinary.uploader.upload(localFilePath, {
       resource_type: 'auto', 
       folder: 'Blog-images', 
       overwrite: false,
     });
-    localFilePath.pipe(result);
 
 
     const token = req.headers.authorization;
@@ -182,7 +177,7 @@ async function updatePost(req, res) {
     res.status(200).json('Post updated successfully');
   } catch (error) {
     console.error('Error updating post:', error);
-    res.status(500).json({'error: ':error.message});
+    res.status(500).json('Internal Server Error...', error.message);
   } finally {
     // fs.unlinkSync(localFilePath);
   }

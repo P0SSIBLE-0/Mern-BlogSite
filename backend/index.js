@@ -36,9 +36,8 @@ const PORT =  3000;
 // middleware
 app.use(express.json());  
 app.use(cors({
-  origin: 'https://mern-blog-site-liart.vercel.app',
+  origin: '*',
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 

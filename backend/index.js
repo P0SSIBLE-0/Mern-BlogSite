@@ -1,6 +1,6 @@
+const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
 const {
   createUser,
   loginUser, 
@@ -39,7 +39,7 @@ const PORT =  3000;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: 'https://snazzy-marigold-b8e5c3.netlify.app', 
+  origin: '*',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'], 

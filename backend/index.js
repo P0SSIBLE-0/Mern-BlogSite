@@ -39,12 +39,25 @@ const PORT =  3000;
 app.use(express.json());
 app.use(cookieParser());
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://mern-blog-site-liart.vercel.app');
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://mern-blog-site-liart.vercel.app"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS,CONNECT,TRACE"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, X-Content-Type-Options, Accept, X-Requested-With, Origin, Access-Control-Request-Method, Access-Control-Request-Headers"
+  );
+  res.setHeader("Access-Control-Allow-Credentials", true);
+
   next();
 });
 
 app.use(cors({
-  origin: 'https://mern-blog-site-liart.vercel.app',
+  origin: "https://mern-blog-site-liart.vercel.app",
   credentials: true,
 }));
 

@@ -67,8 +67,8 @@ const uploadFile = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
-    const localFilePath = req.file.file;
-    if(!localFilePath) {
+    const fileStream = streamifier.createReadStream(req.file.buffer);
+    if(!fileStream) {
       return res.status(400).json('No image file uploaded');
     }
     const { title, summary, content } = req.body;
@@ -80,14 +80,25 @@ const uploadFile = async (req, res) => {
     }
 
     // Upload the image to Cloudinary
-    let result;
-    if (localFilePath) {
-      result = await cloudinary.uploader.upload(localFilePath, {
-        resource_type: 'auto',
-        folder: 'Blog-images',
-        overwrite: false,
-      });
-    }
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: 'auto',
+          folder: 'Blog-images',
+          overwrite: false,
+        },
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+
+      fileStream.pipe(uploadStream);
+    });
+
     // Create new post
     const newPost = new PostModel({
       title,

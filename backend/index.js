@@ -26,8 +26,10 @@ const PORT =  3000;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  credentials: true, 
-  origin: 'https://snazzy-marigold-b8e5c3.netlify.app'
+  credentials: true,
+  origin: 'https://snazzy-marigold-b8e5c3.netlify.app',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 app.get('/post/:id', async(req, res) => {

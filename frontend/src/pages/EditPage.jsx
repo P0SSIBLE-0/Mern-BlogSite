@@ -52,7 +52,7 @@ export default function EditPage() {
     }
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`${config.server_url}/post`, {
+      const response = await fetch(`/post`, {
         method: "PUT",
         body: data,
         headers: {

@@ -129,7 +129,10 @@ const getPost = async (req, res) => {
 
 // function to update a post
 async function updatePost(req, res) {
-  const localFilePath = req.file.buffer;
+  const localFilePath = req.file?.buffer;
+  if(!localFilePath) {
+    return res.status(400).json('No image file uploaded');
+  }
   try {
     // Upload the image to Cloudinary
     const result = await cloudinary.uploader.upload(localFilePath, {

@@ -44,7 +44,12 @@ app.options('/post', (req, res) => {
   res.status(200).send();
 });
 
-app.use(cors());
+app.use(cors({
+  origin: '*', // Allow requests from all origins
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 app.get('/post/:id', async(req, res) => {
   const {id} = req.params;

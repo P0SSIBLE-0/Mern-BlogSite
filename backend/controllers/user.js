@@ -45,7 +45,7 @@ async function loginUser(req, res) {
         username,
       })
     });
-  }catch(err){
+  } catch (err) {
     res.status(500).json({ error: err.message });
   }
 
@@ -159,7 +159,7 @@ async function updatePost(req, res) {
     if (!updatedPost) {
       return res.status(404).json('Post not found or you are not the author');
     }
-
+    res.header('Access-Control-Allow-Origin', 'https://snazzy-marigold-b8e5c3.netlify.app');
     res.status(200).json('Post updated successfully');
   } catch (error) {
     console.error('Error updating post:', error);

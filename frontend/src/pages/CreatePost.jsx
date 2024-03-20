@@ -42,8 +42,6 @@ export default function CreatePost() {
       method: 'POST',
       body: data,
       headers: {
-        "Content-Type": "application/json",
-        credentials: "include",
         Authorization: `${token}`,
       },
     })

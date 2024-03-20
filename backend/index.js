@@ -11,7 +11,6 @@ const {
   updatePost,
   deletePost,
 } = require('./controllers/user')
-const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const app = express();
 require('dotenv').config();
@@ -36,21 +35,17 @@ const uploadMiddleware = multer({ storage: multer.memoryStorage() });// for depl
 
 const PORT =  3000;
 // middleware
-app.use(express.json());
-app.use(cookieParser());    
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://mern-blog-site-liart.vercel.app');
-  res.setHeader('Access-Control-Allow-Methods', '*');
-  res.setHeader('Access-Control-Allow-Headers', '*');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  next();
-});
+app.use(express.json());  
+// app.use((req, res, next) => {
+//   res.setHeader('Access-Control-Allow-Origin', 'https://mern-blog-site-liart.vercel.app');
+//   res.setHeader('Access-Control-Allow-Methods', '*');
+//   res.setHeader('Access-Control-Allow-Headers', '*');
+//   res.setHeader('Access-Control-Allow-Credentials', 'true');
+//   next();
+// });
 
 
-app.use(cors({
-  origin: "https://mern-blog-site-liart.vercel.app",
-  credentials: true,
-}));
+app.use(cors());
 
 app.get('/post/:id', async(req, res) => {
   const {id} = req.params;

@@ -39,7 +39,7 @@ async function loginUser(req, res) {
     // logging in
     jwt.sign({ username, id: user._id }, process.env.SECRET_KEY, { expiresIn: '6h' }, (err, token) => {
       // if (err) console.err(err);
-      res.status(200).cookie('jwt', token, { httpOnly: true, secure: true }).json({
+      res.status(200).json({
         token: token,
         id: user._id,
         username,
@@ -191,6 +191,6 @@ async function deletePost(req, res) {
 
 // logout user
 const logoutUser = (req, res) => {
-  res.cookie('jwt', '').json('ok');
+  res.json('ok');
 }
 module.exports = { createUser, loginUser, logoutUser, uploadFile, getAllPosts, getPost, updatePost, deletePost };

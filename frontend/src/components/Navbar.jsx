@@ -15,7 +15,6 @@ export default function Navbar() {
     }
     try {
       const response = await fetch(`${config.server_url}/profile`, {
-        credentials: "include",
         headers: {
           Authorization: `${token}`, // Send token in header
         },
@@ -42,7 +41,6 @@ export default function Navbar() {
     localStorage.removeItem('token');
     setUserInfo(null)
     fetch(`${config.server_url}/logout`,{
-      credentials: 'include',
       method: 'POST',
     })
     setUserInfo(null);

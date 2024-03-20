@@ -53,6 +53,7 @@ export default function EditPage() {
     const token = localStorage.getItem("token");
     try {
       const response = await fetch(`${config.server_url}/post`, {
+        mode: 'no-cors',
         method: "PUT",
         body: data,
         headers: {

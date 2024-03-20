@@ -39,6 +39,7 @@ export default function CreatePost() {
     const token = localStorage.getItem("token");
     if(!token) return;
     const response = await fetch(`${config.server_url}/post`, {
+      mode: 'no-cors',
       method: 'POST',
       body: data,
       headers: {

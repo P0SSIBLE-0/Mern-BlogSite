@@ -110,8 +110,8 @@ export default function EditPage() {
         </div>
       </div>
       <Editor value={content} onChange={setContent} />
-      <button className="p-2 font-semibold bg-slate-500 text-white my-4 w-32 rounded hover:bg-slate-800 text-center inline-flex justify-center"><img className={`size-6 ${loading?'block': 'hidden'}`} src="https://i.gifer.com/ZKZg.gif" alt="" />
-        Update Post
+      <button className="p-2 font-semibold bg-slate-500 text-white my-4 w-40 rounded hover:bg-slate-800 text-center inline-flex justify-center"><img className={`size-6 ${loading?'block': 'hidden'}`} src="https://i.gifer.com/ZKZg.gif" alt="" />
+         Update Post
       </button>
     </form>
   );

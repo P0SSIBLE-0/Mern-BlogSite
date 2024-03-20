@@ -27,7 +27,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
   credentials: true, 
-  origin: 'http://localhost:5173'
+  origin: 'https://snazzy-marigold-b8e5c3.netlify.app'
 }));
 
 app.get('/post/:id', async(req, res) => {

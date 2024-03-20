@@ -38,18 +38,16 @@ const PORT =  3000;
 // middleware
 app.use(express.json());
 app.use(cookieParser());
-app.options('/post', (req, res) => {
-  res.header('Access-Control-Allow-Origin', 'https://snazzy-marigold-b8e5c3.netlify.app');
-  res.header('Access-Control-Allow-Methods', 'PUT');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, credentials');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.status(200).send();
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
 });
+
 app.use(cors({
   origin: 'https://snazzy-marigold-b8e5c3.netlify.app',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Origin'], 
+  allowedHeaders: ['Content-Type', 'Authorization'], 
 }));
 
 app.get('/post/:id', async(req, res) => {

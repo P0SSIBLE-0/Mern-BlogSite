@@ -17,7 +17,9 @@ const app = express();
 require('dotenv').config();
 const multer = require('multer');
 const PostModel = require('./models/post.model');
-const uploadMiddleware = multer({ dest: 'uploads/' })
+// const uploadMiddleware = multer({ dest: 'uploads/' })
+const uploadMiddleware = multer({ storage: multer.memoryStorage() });
+
 
 const PORT =  3000;
 // middleware

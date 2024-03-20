@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const PostModel = require('../models/post.model');
 const cloudinary = require('cloudinary').v2;
-const fs = require('fs');
 
 // function to create a new User instance or signup 
 async function createUser(req, res) {

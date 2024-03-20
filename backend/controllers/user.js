@@ -6,6 +6,9 @@ const multer = require('multer');
 const PostModel = require('../models/post.model');
 const cloudinary = require('cloudinary').v2;
 
+
+const upload = multer({ storage: multer.memoryStorage() });
+
 // function to create a new User instance or signup 
 async function createUser(req, res) {
   const userDetails = { ...req.body };
@@ -66,7 +69,7 @@ const uploadFile = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
-    const localFilePath = req.file?.buffer;
+    const localFilePath = req.file?.path;
     if(!localFilePath) {
       return res.status(400).json('No image file uploaded');
     }
@@ -81,7 +84,7 @@ const uploadFile = async (req, res) => {
     // Upload the image to Cloudinary
     let result;
     if (localFilePath) {
-      result = await cloudinary.uploader.upload(req.file.buffer, {
+      result = await cloudinary.uploader.upload(req.file.path, {
         resource_type: 'auto',
         folder: 'Blog-images',
         overwrite: false,

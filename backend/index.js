@@ -21,7 +21,7 @@ const PostModel = require('./models/post.model');
 // Configure Multer storage using Cloudinary storage engine
 const cloudinaryStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'temp/'); // Temporary folder for uploaded files on server (optional)
+    cb(null, './uploads/'); // Temporary folder for uploaded files on server (optional)
   },
   filename: (req, file, cb) => {
     const filename = `${Date.now()}-${file.originalname}`;

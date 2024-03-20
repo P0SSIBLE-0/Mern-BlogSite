@@ -8,50 +8,55 @@ const cloudinary = require('cloudinary').v2;
 
 // function to create a new User instance or signup 
 async function createUser(req, res) {
-  const userDetails = {...req.body};
+  const userDetails = { ...req.body };
   // password will be hash on the schema object
   try {
     const newUser = new UserSchema(userDetails);
 
     const savedUser = await newUser.save();
 
-    res.status(200).json({message: "User created successfully!"});
+    res.status(200).json({ message: "User created successfully!" });
     return savedUser;
   } catch (error) {
-    res.status(400).json({error: error.message});
+    res.status(400).json({ error: error.message });
   }
 }
 
 // function to login the existing user
-async function loginUser(req,res){
-  const {username,password} = req.body;
-  const user = await UserSchema.findOne({username});
-  if(!user) {
-    res.status(400).json('Invalid username or email');
+async function loginUser(req, res) {
+  try {
+
+    const { username, password } = req.body;
+    const user = await UserSchema.findOne({ username });
+    if (!user) {
+      res.status(400).json('Invalid username or email');
+    }
+    // Compare password using bcrypt.compare
+    const isMatch = bcrypt.compareSync(password, user.password);
+    if (!isMatch) {
+      res.status(400).json('Invalid password!');
+    }
+    // logging in
+    jwt.sign({ username, id: user._id }, process.env.SECRET_KEY, { expiresIn: '6h' }, (err, token) => {
+      // if (err) console.err(err);
+      res.status(200).cookie('jwt', token, { httpOnly: true, secure: true }).json({
+        token: token,
+        id: user._id,
+        username,
+      })
+    });
+  }catch(err){
+    res.status(500).json({ error: err.message });
   }
-  // Compare password using bcrypt.compare
-  const isMatch = bcrypt.compareSync(password, user.password);
-  if(!isMatch) {
-    res.status(400).json('Invalid password!');
-  }
-  // logging in
-  jwt.sign({username, id: user._id}, process.env.SECRET_KEY,{expiresIn: '6h'}, (err, token) => {
-    // if (err) console.err(err);
-    res.status(200).cookie('jwt', token).json({
-      token: token,
-      id: user._id,
-      username,
-    })
-  });
 
 }
 
 
 // Configure Cloudinary with your credentials (replace with your actual values)     
-cloudinary.config({ 
-  cloud_name: process.env.CLOUDINARY_NAME, 
-  api_key: process.env.CLOUDINARY_API_KEY, 
-  api_secret: process.env.CLOUDINARY_SECRET_KEY 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET_KEY
 });
 
 // Configure Multer storage using Cloudinary storage engine
@@ -103,17 +108,17 @@ const uploadFile = async (req, res) => {
 
 
 // function to getting all posts
-const getAllPosts = async(req, res) => {
+const getAllPosts = async (req, res) => {
   const posts = await PostModel.find()
-  .populate('author', ['username'])
-  .sort({createdAt: -1})
-  .limit(20);
+    .populate('author', ['username'])
+    .sort({ createdAt: -1 })
+    .limit(20);
   res.status(200).json(posts);
 }
 // function to get single post
-const getPost = async(req, res) =>{
+const getPost = async (req, res) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     const post = await PostModel.fileById(id);
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
@@ -202,4 +207,4 @@ async function deletePost(req, res) {
 const logoutUser = (req, res) => {
   res.cookie('jwt', '').json('ok');
 }
-module.exports = { createUser, loginUser, logoutUser , uploadFile, getAllPosts, getPost, updatePost, deletePost};
+module.exports = { createUser, loginUser, logoutUser, uploadFile, getAllPosts, getPost, updatePost, deletePost };

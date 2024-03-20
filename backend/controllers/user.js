@@ -50,9 +50,9 @@ async function loginUser(req,res){
 
 // Configure Cloudinary with your credentials (replace with your actual values)     
 cloudinary.config({ 
-  cloud_name: 'dla9vbhdk', 
-  api_key: '773461935487564', 
-  api_secret: 'zvlNLuw72IB_0DSoUpj9urn76Fg' 
+  cloud_name: process.env.CLOUDINARY_NAME, 
+  api_key: process.env.CLOUDINARY_API_KEY, 
+  api_secret: process.env.CLOUDINARY_SECRET_KEY 
 });
 
 // Configure Multer storage using Cloudinary storage engine

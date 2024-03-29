@@ -48,7 +48,7 @@ export default function Navbar() {
   }
   return (
       <header className="flex justify-between p-4 items-center sticky top-0 backdrop-blur-sm">
-        <NavLink to="/" className="text-2xl lg:text-3xl font-Montserrat font-bold text-[#080fe8]">
+        <NavLink to="/" className="text-2xl lg:text-3xl font-Montserrat font-bold bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-600 text-transparent bg-clip-text inline-block">
           Perspective
         </NavLink>
         {userInfo && (
@@ -66,12 +66,12 @@ export default function Navbar() {
         {
         !userInfo && (
             <>
-              <nav className="flex space-x-4 list-none">
+              <nav className="flex space-x-4 list-none text-sm lg:text-base md:text-base">
                 <li className="border-2 border-gray-800 py-1 px-4 rounded-2xl font-semibold bg-gray-800 text-white hover:bg-gray-900">
                   <NavLink to="/login">Login</NavLink>
                 </li>
                 <li className="border border-gray-800 py-1 px-3 rounded-2xl font-semibold text-black hover:bg-gray-800 hover:text-white">
-                  <NavLink to="/signup">Singup</NavLink>
+                  <NavLink to="/signup">Signup</NavLink>
                 </li>
               </nav>
             </>

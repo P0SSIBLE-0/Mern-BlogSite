@@ -54,7 +54,7 @@ export default function Login() {
   }
   return (
     <form
-      className="flex flex-col items-center space-y-5 w-4/5 max-w-80 m-auto rounded-lg p-7 lg:p-10 md:p-9 my-2 bg-white min-h-96 mt-20 font-Montserrat"
+      className="flex flex-col items-center space-y-5 w-[90%] max-w-80 m-auto rounded-lg p-7 lg:p-10 md:p-9 my-2 bg-white min-h-96 mt-20 font-Montserrat"
       onSubmit={login}
     >
       <div className="flex flex-col items-center my-6">
@@ -90,7 +90,7 @@ export default function Login() {
       <button className="py-2 px-2 mt-10 w-full outline-2 bg-gray-800 text-white hover:bg-gray-900 hover:tracking-wider font-semibold rounded-xl ">
         Login
       </button>
-      <span className="text-xs font-semibold text-neutral-400">Don't have an account?<Link to={'/signup'} className="hover:text-blue-400"> Signup</Link></span>
+      <span className="text-xs font-semibold text-neutral-400">Don't have an account?<Link to="/signup" className="hover:text-blue-400"> Signup</Link></span>
     </form>
   );
 }

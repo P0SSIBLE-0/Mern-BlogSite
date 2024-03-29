@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../userContext/UserContext";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
 import config from "../../config";
@@ -43,14 +43,14 @@ export default function Signup() {
   }
   return (
     <form
-      className="flex flex-col items-center space-y-8 w-4/5 max-w-80 m-auto rounded-lg p-10 my-2 bg-white min-h-96 mt-20 font-Montserrat"
+      className="flex flex-col items-center space-y-8 w-[90%] max-w-80 m-auto rounded-lg p-8 my-3 bg-white min-h-96 mt-20 font-Montserrat"
       onSubmit={signup}
     >
       <div className="text-center">
         <h1 className="text-3xl font-bold font-Montserrat">Get Started</h1>
-        <span className="text-sm text-neutral-500">
-          Already have account? <a className="text-blue-500 font-semibold hover:underline" href="/login">Login</a>
-        </span>
+        <Link to="/login" className="text-sm text-neutral-500">
+          Already have account? <span className="text-blue-500 font-semibold hover:underline" >Login</span>
+        </Link>
       </div>
       <input
         className="border-b border-gray-800 py-1 w-full outline-none placeholder:text-black bg-white focus:border-blue-700 text-sm placeholder:py-2"

@@ -147,8 +147,6 @@ async function updatePost(req, res) {
   const { title, summary, content, id, cover } = req.body;
   try {
     let coverUrl;
-    // Extract public ID from the URL
-
     // Upload the image to Cloudinary if it not already exists
     if (req.file) {
       const fileStream = streamifier.createReadStream(req.file.buffer);

@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
-import  Post from '../components/Card';
-import Loading from '../components/Loader';
-import config from '../../config';
+import { useEffect, useState } from "react";
+import Post from "../components/Card";
+import Loading from "../components/Loader";
+import config from "../../config";
+import Skeleton from "../components/Skeleton";
 export default function Blogs() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,22 +14,26 @@ export default function Blogs() {
       }
       const data = await response.json();
       setPosts(data);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
-      console.error('Error fetching posts:', error);
+      console.error("Error fetching posts:", error);
       // Handle the error appropriately (e.g., display an error message)
     }
   }
   useEffect(() => {
     getPosts();
-  }, [])
+  }, []);
   return (
-    <div className='my-4'>
-      {loading ? <Loading/> :
-      (
-        posts.length > 0 && posts.map(post => ( <Post key={post._id} {...post}/>))
-      )
-      }
+    <div className="my-4">
+      {loading ? (
+        <Loading />
+      ) : (
+        posts.length > 0 &&
+        posts.map((post) => <Post key={post._id} {...post} loading={loading} />)
+      )}
+      {!loading && posts.length === 0 && (
+        <p className="text-2xl font-semibold text-center">No posts found</p>
+      )}
     </div>
-  )
+  );
 }

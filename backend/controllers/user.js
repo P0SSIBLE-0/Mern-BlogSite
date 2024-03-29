@@ -61,14 +61,14 @@ cloudinary.config({
 });
 
 
-const uploadFile = async (req, res) => {
+const createPost = async (req, res) => {
   try {
     // Ensure file is uploaded and available in req.file
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
     const fileStream = streamifier.createReadStream(req.file.buffer);
-    if(!fileStream) {
+    if (!fileStream) {
       return res.status(400).json('No image file uploaded');
     }
     const { title, summary, content } = req.body;
@@ -144,33 +144,38 @@ const getPost = async (req, res) => {
 
 // function to update a post
 async function updatePost(req, res) {
+  const { title, summary, content, id, cover } = req.body;
   try {
-    const fileStream = streamifier.createReadStream(req.file.buffer);
+    let coverUrl;
+    // Extract public ID from the URL
 
-    // Upload the image to Cloudinary
-    const result = await new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          resource_type: 'auto',
-          folder: 'Blog-images',
-          overwrite: false,
-        },
-        (error, result) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(result);
+    // Upload the image to Cloudinary if it not already exists
+    if (req.file) {
+      const fileStream = streamifier.createReadStream(req.file.buffer);
+      const result = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            resource_type: 'auto',
+            folder: 'Blog-images',
+            overwrite: false,
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
           }
-        }
-      );
+        );
 
-      fileStream.pipe(uploadStream);
-    });
-
-
+        fileStream.pipe(uploadStream);
+      });
+      coverUrl = result.secure_url;
+    } else {
+      coverUrl = cover;
+    }
 
     const token = req.headers.authorization;
-    const { title, summary, content, id } = req.body;
     const userData = await jwt.verify(token, process.env.SECRET_KEY);
 
     const postData = await PostModel.findById(id);
@@ -187,7 +192,7 @@ async function updatePost(req, res) {
       title,
       summary,
       content,
-      cover: result.secure_url,
+      cover: coverUrl,
       author: userData.id,
     };
 
@@ -209,29 +214,52 @@ async function updatePost(req, res) {
   }
 }
 
+const deleteImageFromUrl = async (imageUrl) => {
+  try {
+    // Extract publicId from the URL
+    const publicIdMatch = imageUrl.match(/\/([^\/]+)\.[^/]+$/); // Regex to capture publicId
+    if (!publicIdMatch) {
+      throw new Error('Invalid image URL format');
+    }
+    const publicId = publicIdMatch[1];
+
+    const response = await cloudinary.uploader.destroy(`Blog-images/${publicId}`);
+    console.log('Image deleted successfully:', response);
+  } catch (error) {
+    console.error('Error deleting image:', error);
+    // Handle errors appropriately, e.g., return an error message
+  }
+};
+
 // function to delete a post
 async function deletePost(req, res) {
-  const postId = req.params.id;
-  const token = req.headers.authorization;
-  const userData = jwt.verify(token, process.env.SECRET_KEY);
+  try {
+    const postId = req.params.id;
+    const token = req.headers.authorization;
+    const userData = jwt.verify(token, process.env.SECRET_KEY);
 
-  const postData = await PostModel.findById(postId);
-  if (!postData) {
-    return res.status(404).json('Post not found');
+    const postData = await PostModel.findById(postId);
+    if (!postData) {
+      return res.status(404).json('Post not found');
+    }
+    // deteting the Cover image from cloudinary server
+    deleteImageFromUrl(postData.cover);
+
+    const isAuthor = postData.author.toString() === userData.id;
+    if (!isAuthor) {
+      return res.status(403).json('You are not the author of this post');
+    }
+
+    await PostModel.deleteOne({ _id: postId });
+
+    return res.status(200).json('Post deleted successfully');
+  } catch (error) {
+    return res.status(500).json('An Error occure while deleting post', error);
   }
-
-  const isAuthor = postData.author.toString() === userData.id;
-  if (!isAuthor) {
-    return res.status(403).json('You are not the author of this post');
-  }
-
-  await PostModel.deleteOne({ _id: postId });
-
-  return res.status(200).json('Post deleted successfully');
 }
 
 // logout user
 const logoutUser = (req, res) => {
   res.json('ok');
 }
-module.exports = { createUser, loginUser, logoutUser, uploadFile, getAllPosts, getPost, updatePost, deletePost };
+module.exports = { createUser, loginUser, logoutUser, createPost, getAllPosts, getPost, updatePost, deletePost };

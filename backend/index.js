@@ -5,7 +5,7 @@ const {
   createUser,
   loginUser, 
   logoutUser,
-  uploadFile,
+  createPost,
   getAllPosts,
   getPost,
   updatePost,
@@ -72,7 +72,7 @@ app.get('/profile', (req, res) => {
 });
 
 
-app.post('/post',uploadMiddleware.single('file'), uploadFile);
+app.post('/post',uploadMiddleware.single('file'), createPost);
 app.put('/post',uploadMiddleware.single('file'), updatePost );
 app.delete('/post/:id', deletePost);
 

@@ -1,95 +1,312 @@
-import { useEffect, useState } from "react";
-import {Navigate} from "react-router-dom";
+import React, { useState } from "react";
+import { Navigate } from "react-router-dom";
 import Editor from "../components/Editor";
 import toast from "react-hot-toast";
 import config from "../../config";
 
 export default function CreatePost() {
-  const [title, setTitle] = useState('');
-  const [summary, setSummary] = useState('');
-  const [content, setContent] = useState('');
-  const [files, setFiles] = useState('');
-  const [redirect , setRedirect] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState('');
-  const [loading , setLoading] = useState(false)
+  const [formData, setFormData] = useState({
+    title: "",
+    content: "",
+    tags: [],
+    category: "",
+  });
+  const [files, setFiles] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [redirect, setRedirect] = useState(false);
 
-  // Function to handle image selection
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   const handleImageChange = (event) => {
-    const selectedFile = event.target.files[0];
-    setFiles([selectedFile]); // Store the selected file(s)
-    
-    if (selectedFile) {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.size > 4.5 * 1024 * 1024) {
+        toast.error("Image size should be under 4.5MB");
+        return;
+      }
+
+      setFiles(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreviewUrl(reader.result); // Store the preview URL
+        setPreviewUrl(reader.result);
       };
-      reader.readAsDataURL(selectedFile);
+      reader.readAsDataURL(file);
     }
   };
 
-  async function createNewPost(ev){
-    ev.preventDefault();
-    const data = new FormData();
-    data.set('title', title);
-    data.set('summary', summary);
-    data.set('content', content);
-    data.set('file', files[0]); 
-    try{
+  const removeImage = () => {
+    setFiles(null);
+    setPreviewUrl("");
+  };
 
+  const handleAddTag = (tagValue) => {
+    if (tagValue) {
+      // Split the input by commas and trim whitespace
+      // Split the input by commas and trim whitespace
+      const newTags = tagValue.split(",").map((tag) => tag.trim());
+
+      // Filter out empty strings and add only unique tags
+      const uniqueNewTags = newTags.filter((tag) => tag && !formData.tags.includes(tag));
+
+      // Limit total tags to 4
+      const updatedTags = [...formData.tags, ...uniqueNewTags].slice(0, 4);
+
+      setFormData((prevState) => ({
+        ...prevState,
+        tags: updatedTags,
+      }));
+    }
+  };
+
+  const handleDeleteTag = (tagToDelete) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      tags: prevState.tags.filter((tag) => tag !== tagToDelete),
+    }));
+  };
+  const createNewPost = async (ev) => {
+    ev.preventDefault();
+
+    if (!formData.title || !formData.content || !files) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    const summary =
+      formData.content
+        .replace(/<[^>]*>/g, "") // Remove HTML tags
+        .replace(/[#*]/g, "") // Remove # and *
+        .replace(/[*_]{1,2}/g, "") // Remove bold and italic markers (e.g., *, _, **, __)
+        .slice(0, 230) // Take first 230 characters
+        .trim() + "..."; // Add ellipsis
+
+    const data = new FormData();
+    // Handle tags separately to ensure they're sent as JSON string
+    const formDataToSend = {
+      ...formData,
+      tags: formData.tags
+    };
+    
+    Object.keys(formDataToSend).forEach((key) => {
+      data.set(key, formDataToSend[key]);
+    });
+    data.set("summary", summary);
+    data.set("file", files);
+
+    try {
       setLoading(true);
       const token = localStorage.getItem("token");
-      if(!token) return;
+      if (!token) {
+        toast.error("Please login first");
+        return;
+      }
+
       const response = await fetch(`${config.server_url}/post`, {
-        method: 'POST',
+        method: "POST",
         body: data,
         headers: {
-          Authorization: `${token}`,
+          Authorization: token,
         },
-      })
-      if(response.ok){
-        setLoading(false);
+      });
+
+      if (response.ok) {
+        toast.success("Post created successfully!");
         setRedirect(true);
-        toast.success("Post has been created successfully")
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message || "Failed to create post");
       }
-    } catch(error){
+    } catch (error) {
       console.error(error);
-      toast.error("something went wrong!")
+      toast.error("Something went wrong!");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  if (redirect) {
+    return <Navigate to="/" />;
   }
-  if(redirect){
-    return <Navigate to={'/'}/>
-  }
+
   return (
-    <form className="flex flex-col p-4" onSubmit={createNewPost}>
-      <input className="p-2 my-2 border-2 border-neutral-400 rounded" 
-      type="text" 
-      placeholder="Title"
-      value={title}
-      onChange={ev => setTitle(ev.target.value)}
-      />
-      <input className="p-2 my-3 border-2 border-neutral-400 rounded" 
-      type="text"  
-      placeholder="summary" 
-      value={summary}
-      onChange={ev => setSummary(ev.target.value)}
-      />
-       <div className="flex flex-wrap">
-          {files && (
-            <img
-              className="p-2 rounded-xl max-w-full max-h-full lg:w-120px  md:100px"
-              src={previewUrl}
-              alt="Selected"
+    <div className="flex flex-col gap-4 justify-around lg:flex-row md:flex-row max-w-7xl mx-auto ">
+      <div className="max-w-[900px] flex-1 bg-white rounded-md mx-2">
+        <div className="py-8 px-4 lg:px-14">
+          {/* Cover Image Section */}
+          <div className="mb-6">
+            {!previewUrl && (
+              <button
+                className="px-4 py-2 border-2 border-gray-300 fonts-semibold rounded-md text-zinc-800 hover:border-gray-400 transition-colors font-semibold font-sans"
+                onClick={() => document.getElementById("cover-image").click()}
+              >
+                Add a cover image
+              </button>
+            )}
+            <input
+              type="file"
+              id="cover-image"
+              className="hidden"
+              onChange={handleImageChange}
+              accept="image/*"
             />
-          )}
+            {previewUrl && (
+              <div className="relative">
+                <img
+                  src={previewUrl}
+                  alt="Cover"
+                  className="w-full h-48 object-cover rounded-lg"
+                />
+                <button
+                  onClick={removeImage}
+                  className="absolute top-2 right-2 p-1 bg-gray-800/50 rounded-full text-white hover:bg-gray-800/75"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Title Input */}
           <input
-            className="p-2 my-3 border-2 border-neutral-400 rounded"
-            type="file"
-            onChange={handleImageChange}
+            type="text"
+            placeholder="New post title here..."
+            className="w-full text-3xl lg:text-5xl font-extrabold mb-4 border-none outline-none text-gray-800 placeholder-zinc-600 font-sans"
+            value={formData.title}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, title: e.target.value }))
+            }
           />
-          <span className="p-2 lg:my-2 text-sm text-red-400" >Image size should be under 4.5Mb</span>
+
+          {/* Tags Section */}
+          <div className="flex flex-wrap gap-2 mb-6">
+            {formData.tags.map((tag, index) => (
+              <div
+                key={index}
+                className="flex items-center bg-gray-100 rounded-md px-2 py-1"
+              >
+                <span className="text-gray-700 text-sm">#{tag}</span>
+                <button
+                  onClick={() => handleDeleteTag(tag)}
+                  className="ml-2 text-gray-500 hover:text-gray-700"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+            <div className="flex items-center">
+              <span className="text-zinc-700 mr-1">#</span>
+              <input
+                type="text"
+                placeholder="Add upto 4 tags"
+                className="border-none outline-none text-sm"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleAddTag(e.target.value);
+                    e.target.value = "";
+                  }
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Category Dropdown */}
+          <select
+            value={formData.category}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, category: e.target.value }))
+            }
+            className="w-full p-2 mb-4 border border-gray-300 rounded-md text-gray-700"
+          >
+           {["Technology", "Programming", "Design", "Career", "Other", "Finance", "Health", "Travel", "Lifestyle"].map((category) => (
+             <option key={category} value={category}>{category}</option>
+           ))}
+          </select>
+
+          {/* Editor */}
+          <div className="min-h-[240px]">
+            <Editor
+              value={formData.content}
+              onChange={(value) =>
+                setFormData((prev) => ({ ...prev, content: value }))
+              }
+            />
+          </div>
         </div>
-      <Editor value={content} onChange={setContent}/>
-      <button className="p-2 font-semibold bg-slate-500 text-white my-4 w-40 rounded hover:bg-slate-800 inline-flex gap-2 text-center justify-center"> <img className={`size-6 ${loading?'block': 'hidden'}`} src="https://i.gifer.com/ZKZg.gif" alt="" />Create Post</button>
-    </form>
+
+        {/* Bottom Action Bar */}
+        <div className="fixed bottom-0 left-0 lg:left-[7.325rem] md:left-10 right-0 p-4 mt-5">
+          <div className=" mx-auto flex items-center gap-4">
+            <button
+              onClick={createNewPost}
+              disabled={loading}
+              className="px-4 py-2 bg-zinc-900 text-white rounded-md hover:bg-zinc-800 disabled:bg-gray-300"
+            >
+              {loading ? "Publishing..." : "Publish"}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="w-[35%] p-10 hidden lg:block">
+        <h2 className="text-lg font-semibold mb-4">Markdown Instructions</h2>
+        <p>Use Markdown syntax to format your post:</p>
+        <div className="w-full bg-gray-50 p-2 rounded-md font-mono font-normal table-auto my-2 overflow-auto">
+          <table className="p-3">
+            <thead>
+              <tr>
+                <th>Format</th>
+                <th>Markdown Syntax</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>**Bold**</td>
+                <td>Surround text with `**`</td>
+              </tr>
+              <tr>
+                <td>*Italic*</td>
+                <td>Surround text with `*`</td>
+              </tr>
+              <tr>
+                <td>[Link](http://example.com)</td>
+                <td>`[Link](http://example.com)`</td>
+              </tr>
+              <tr>
+                <td>Lists</td>
+                <td>Use `-` or `+` for unordered lists, and `1.` for ordered lists</td>
+              </tr>
+              <tr>
+                <td>Headers</td>
+                <td>Use `#` for headings, with the number of `#` indicating the level</td>
+              </tr>
+              <tr>
+                <td>Code</td>
+                <td>Surround code with backticks ``</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 }

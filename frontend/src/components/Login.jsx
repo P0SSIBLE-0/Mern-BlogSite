@@ -1,10 +1,9 @@
 import { useContext, useState } from "react";
-import { Navigate , Link} from "react-router-dom";
-import { Eye, EyeOff} from "lucide-react"
+import { Navigate, Link } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import { UserContext } from "../userContext/UserContext";
 import toast from "react-hot-toast";
 import config from "../../config";
-
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -12,12 +11,11 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [redirect, setRedirect] = useState(false);
 
-
-  const {setUserInfo} = useContext(UserContext);
+  const { setUserInfo } = useContext(UserContext);
   const login = async (e) => {
     e.preventDefault();
-    if(username == "" && password == ""){
-      toast("Please enter your username and password!")
+    if (username == "" && password == "") {
+      toast("Please enter your username and password!");
       return;
     }
 
@@ -34,10 +32,10 @@ export default function Login() {
       if (response.ok) {
         // login success
         const data = await response.json();
-        localStorage.setItem('token', data.token);
+        localStorage.setItem("token", data.token);
         setUserInfo(data);
         setRedirect(true);
-        toast.success('You are logined in!')
+        toast.success("You are logined in!");
       } else {
         // login failed
         const errorData = await response.json();
@@ -46,7 +44,7 @@ export default function Login() {
     } catch (error) {
       console.error("Login error:", error);
       // alert("Login failed. Please check your credentials and try again.");
-      toast.error("Login failed. Please try again!")
+      toast.error("Login failed. Please try again!");
     }
   };
   if (redirect) {
@@ -54,43 +52,68 @@ export default function Login() {
   }
   return (
     <form
-      className="flex flex-col items-center space-y-5 w-[90%] max-w-80 m-auto rounded-lg p-7 lg:p-10 md:p-9 my-2 bg-white min-h-96 mt-20 font-Montserrat"
+      className="flex flex-col items-center space-y-5 w-[90%] max-w-96 m-auto rounded-lg p-7 lg:p-10 md:p-9 my-2 bg-white min-h-96 lg:w-1/3"
       onSubmit={login}
     >
       <div className="flex flex-col items-center my-6">
-        <h1 className="text-[1.8rem] font-Montserrat font-extrabold my-2">Welcome back!</h1>
-        <span className="text-xs font-semibold text-neutral-500 mt-2">Please enter your details</span>
-
-      </div>
-      <input
-        className="border-b border-gray-800 py-1 w-full outline-none placeholder:text-black bg-white focus:border-blue-700 text-sm placeholder:py-2"
-        type="text"
-        name="usename"
-        placeholder="Username"
-        required
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <div className="w-full relative">
-        <input
-          className="border-b border-gray-800 py-1 outline-none  w-full focus:border-blue-700 placeholder:text-black text-sm"
-          type={`${showPassword ? "text" : "password"}`}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          required
-        />
-        <span
-          className={`absolute right-2 top-1 font-semibold cursor-pointer `}
-          onClick={() => setShowPassword(!showPassword)}
-        >
-          {showPassword ? <Eye/>  :<EyeOff/>}
+        <h1 className="text-[1.8rem] font-Montserrat font-extrabold my-2">
+          Welcome back!
+        </h1>
+        <span className="text-xs font-semibold text-neutral-500">
+          Please enter your details
         </span>
       </div>
-      <button className="py-2 px-2 mt-10 w-full outline-2 bg-gray-800 text-white hover:bg-gray-900 hover:tracking-wider font-semibold rounded-xl ">
-        Login
-      </button>
-      <span className="text-xs font-semibold text-neutral-400">Don't have an account?<Link to="/signup" className="hover:text-blue-400"> Signup</Link></span>
+      <div className="w-full relative flex flex-col">
+        <input
+          className="peer bg-blue-50 mt-2 py-2 text-lg px-2 w-full outline-none border rounded-md focus:border-blue-700 placeholder:py-2 placeholder-transparent"
+          autoFocus
+          type="text"
+          name="username"
+          id="username"
+          placeholder="Username"
+          required
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <label
+          htmlFor="username"
+          className="absolute text-neutral-500 duration-300 transform -translate-y-3 scale-75 top-0 z-10 origin-[0]  px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-[1.2rem] peer-focus:scale-90 peer-focus:-translate-y-4"
+        >
+          Username
+        </label>
+      </div>
+      <div className="w-full relative flex flex-col">
+        <input
+          className="peer bg-blue-50 mt-2 py-2 text-lg px-2 w-full outline-none border rounded-md focus:border-blue-700 placeholder:py-2 placeholder-transparent"
+          type={`${showPassword ? "text" : "password"}`}
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="********"
+          required
+        />
+        <label htmlFor="password" className="absolute text-neutral-500 duration-300 transform -translate-y-3 scale-75 top-0 z-10 origin-[0]  px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-[1.2rem] peer-focus:scale-90 peer-focus:-translate-y-4">
+          Password
+        </label>
+        <span
+          className={`absolute right-2 top-5 font-semibold cursor-pointer `}
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <Eye /> : <EyeOff />}
+        </span>
+      </div>
+      <div className="w-full">
+        <button className="py-2 px-2 mt-5 w-full outline-2 bg-zinc-800 text-white hover:bg-zinc-900 hover:tracking-wider font-semibold rounded-md ">
+          Login
+        </button>
+      </div>
+      <span className="text-xs font-semibold text-neutral-400">
+        Don't have an account?
+        <Link to="/signup" className="hover:text-blue-400 text-blue-500">
+          {" "}
+          Signup
+        </Link>
+      </span>
     </form>
   );
 }

@@ -43,50 +43,71 @@ export default function Signup() {
   }
   return (
     <form
-      className="flex flex-col items-center space-y-8 w-[90%] max-w-80 m-auto rounded-lg p-8 my-3 bg-white min-h-96 mt-20 font-Montserrat"
+      className="flex flex-col items-center space-y-5 w-[90%] max-w-96 m-auto rounded-md px-8 py-14 my-3 bg-white min-h-96 mt-20 shadow-md"
       onSubmit={signup}
     >
       <div className="text-center">
-        <h1 className="text-3xl font-bold font-Montserrat">Get Started</h1>
+        <h1 className="text-3xl font-bold font-Montserrat">Sign up</h1>
         <Link to="/login" className="text-sm text-neutral-500">
-          Already have account? <span className="text-blue-500 font-semibold hover:underline" >Login</span>
+          Already have account?{" "}
+          <span className="text-blue-500 font-semibold hover:underline">
+            Login
+          </span>
         </Link>
       </div>
-      <input
-        className="border-b border-gray-800 py-1 w-full outline-none placeholder:text-black bg-white focus:border-blue-700 text-sm placeholder:py-2"
-        type="text"
-        name="usename"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        className="border-b border-gray-800 py-1 w-full outline-none placeholder:text-black bg-white focus:border-blue-700 text-sm placeholder:py-2"
-        type="email"
-        name="usename"
-        placeholder="Email address"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+      <div className="w-full">
+        <label htmlFor="username" className="font-semibold text-gray-500 ml-1">
+          Username
+        </label>
+        <input
+          className="bg-blue-50 mt-2 py-2 text-lg px-2 w-full outline-none border rounded-md focus:border-blue-700  placeholder:py-2"
+          type="text"
+          id="username"
+          name="usename"
+          placeholder="sam jones"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+      </div>
+      <div className="w-full">
+        <label htmlFor="email" className="font-semibold text-gray-500 ml-1">
+          Email
+        </label>
+        <input
+          className="bg-blue-50 mt-2 py-2 text-lg px-2 w-full outline-none border rounded-md focus:border-blue-700  placeholder:py-2"
+          type="email"
+          id="email"
+          name="email"
+          placeholder="sam@example.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </div>
 
       <div className="w-full relative my-4">
+        <label htmlFor="password" className="font-semibold text-gray-500 ml-1">
+          Password
+        </label>
         <input
-          className="border-b border-gray-800 py-1 w-full outline-none placeholder:text-black bg-white focus:border-blue-700 text-sm placeholder:py-2"
+          className="bg-blue-50 mt-2 py-2 text-lg px-2 w-full outline-none border rounded-md focus:border-blue-700  placeholder:py-2"
+          id="password"
           type={`${showPassword ? "text" : "password"}`}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
         />
         <span
-          className={`absolute right-2 top-1 font-semibold hover:text-blue-600 cursor-pointer `}
+          className={`absolute right-2 top-11 font-semibold hover:text-blue-600 cursor-pointer `}
           onClick={() => setShowPassword(!showPassword)}
         >
           {showPassword ? <Eye /> : <EyeOff />}
         </span>
       </div>
-      <button className="py-2 px-2 w-full outline-2 bg-gray-800 text-white hover:bg-gray-900 hover:tracking-wider font-semibold rounded-xl my-6">
+      <div className="w-full">
+      <button className="py-2 px-2 w-full outline-2 bg-zinc-800 text-white hover:bg-gray-900 hover:tracking-wider font-semibold rounded-md mt-5">
         Signup
       </button>
+      </div>
     </form>
   );
 }

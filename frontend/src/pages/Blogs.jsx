@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Post from "../components/Card";
 import Loading from "../components/Loader";
 import config from "../../config";
-import Skeleton from "../components/Skeleton";
 export default function Blogs() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,7 +23,10 @@ export default function Blogs() {
     getPosts();
   }, []);
   return (
-    <div className="my-4">
+    <div className="my-4 lg:max-w-screen-lg mx-auto">
+      {/* <HeroSection /> */}
+      <h1 className="text-3xl font-extrabold mb-10 lg:text-[3rem] lg:ml-16 lg:mb-10 my-2 ml-4">Blogs</h1>
+
       {loading ? (
         <Loading />
       ) : (

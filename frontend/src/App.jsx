@@ -5,7 +5,8 @@ import "./App.css";
 
 export default function Home() {
   return (
-    <div className="lg:max-w-screen-lg h-[100vh] lg:m-auto">
+    
+    <div className=" h-[100vh] lg:m-auto">
       <Toaster
         position="top-center"
         reverseOrder={false}

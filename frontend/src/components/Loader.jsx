@@ -3,7 +3,7 @@ import '../App.css';
 
 export default function SketetonLoader() {
   return (
-  <div className="flex h-[90vh] w-full items-center justify-center">
+  <div className="flex min-h-screen w-full items-center justify-center">
   <div>
     <div className="loader">
       <div className="circle"></div>

@@ -31,6 +31,19 @@ export default function Card({
     const bgColor = ["bg-blue-500", "bg-red-500", "bg-green-500", "bg-yellow-400", "bg-purple-500, bg-lime-500, bg-indigo-500", "bg-pink-500", "bg-cyan-500"];
     return bgColor[Math.floor(Math.random() * bgColor.length)];
   }
+  const getThumbnailImg = (url) => {
+    if (!url || !url.includes('cloudinary.com')) return url;
+    
+    // Split URL to insert transformation parameters
+    const parts = url.split('/upload/');
+    
+    // Add transformation parameters:
+    // c_scale - Scale the image
+    // w_800 - Set maximum width to 800px
+    // q_auto - Automatic quality optimization
+    // f_auto - Automatic format selection based on browser support
+    return `${parts[0]}/upload/c_scale,w_800,q_auto,f_auto/${parts[1]}`;
+  };
   return loading ? (
     <Skeleton />
   ) : (
@@ -42,7 +55,7 @@ export default function Card({
           <div className="w-full h-full relative overflow-hidden rounded-md  shadow-md">
 
             <img
-              src={cover}
+              src={getThumbnailImg(cover)}
               onError={(e) =>
                 (e.target.src = `https://blog.kanalysis.com/wp-content/uploads/2023/01/placeholder-116.png`)
               }

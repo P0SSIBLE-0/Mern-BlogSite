@@ -65,7 +65,7 @@ export default function Login() {
       </div>
       <div className="w-full relative flex flex-col">
         <input
-          className="peer bg-blue-50 mt-2 py-2 text-lg px-2 w-full outline-none border rounded-md focus:border-blue-700 placeholder:py-2 placeholder-transparent"
+          className="peer bg-gray-50 mt-2 py-1.5 px-2 w-full outline-none border rounded-md focus:border-blue-700 placeholder:py-2 placeholder-transparent"
           autoFocus
           type="text"
           name="username"
@@ -77,14 +77,14 @@ export default function Login() {
         />
         <label
           htmlFor="username"
-          className="absolute text-neutral-500 duration-300 transform -translate-y-3 scale-75 top-0 z-10 origin-[0]  px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-[1.2rem] peer-focus:scale-90 peer-focus:-translate-y-4"
+          className="absolute left-0 top-2 text-neutral-500 duration-300 transform origin-[0] px-3 py-2 scale-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:text-xs  peer-focus:-left-2 peer-focus:-translate-y-7 peer-valid:scale-80 peer-valid:-translate-y-7 peer-valid:-left-2 peer-valid:text-xs text-sm"
         >
           Username
         </label>
       </div>
       <div className="w-full relative flex flex-col">
         <input
-          className="peer bg-blue-50 mt-2 py-2 text-lg px-2 w-full outline-none border rounded-md focus:border-blue-700 placeholder:py-2 placeholder-transparent"
+          className="peer bg-gray-100 mt-2 py-1.5 text-lg px-2 w-full outline-none border rounded-md focus:border-blue-700 placeholder:py-2 placeholder-transparent"
           type={`${showPassword ? "text" : "password"}`}
           id="password"
           value={password}
@@ -92,11 +92,11 @@ export default function Login() {
           placeholder="********"
           required
         />
-        <label htmlFor="password" className="absolute text-neutral-500 duration-300 transform -translate-y-3 scale-75 top-0 z-10 origin-[0]  px-2 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-[1.2rem] peer-focus:scale-90 peer-focus:-translate-y-4">
+        <label htmlFor="password" className="absolute left-0 top-2.5 text-neutral-500 duration-300 transform origin-[0] px-3 py-2 scale-100 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:text-xs  peer-focus:-left-2 peer-focus:-translate-y-7 peer-valid:scale-80 peer-valid:-translate-y-7 peer-valid:-left-2 peer-valid:text-xs text-sm">
           Password
         </label>
         <span
-          className={`absolute right-2 top-5 font-semibold cursor-pointer `}
+          className={`absolute right-2 top-4 font-semibold cursor-pointer `}
           onClick={() => setShowPassword(!showPassword)}
         >
           {showPassword ? <Eye /> : <EyeOff />}

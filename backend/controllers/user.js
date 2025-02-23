@@ -62,6 +62,9 @@ cloudinary.config({
 
 
 const createPost = async (req, res) => {
+  const { title, summary, content, category } = req.body;
+  const tags = req.body.tags.split(',').map(tag => tag.trim()).slice(0, 5);
+  
   try {
     // Ensure file is uploaded and available in req.file
     if (!req.file) {
@@ -71,7 +74,7 @@ const createPost = async (req, res) => {
     if (!fileStream) {
       return res.status(400).json('No image file uploaded');
     }
-    const { title, summary, content, tags, category } = req.body;
+
     const token = req.headers.authorization;
     // Verify JWT token
     const userData = await jwt.verify(token, process.env.SECRET_KEY);
@@ -146,7 +149,7 @@ const getPost = async (req, res) => {
 
 // function to update a post
 async function updatePost(req, res) {
-  const { title, summary, content, id, cover ,category} = req.body; // Added tags to the destructured variables
+  const { title, summary, content, id, cover, category } = req.body; // Added tags to the destructured variables
   const tags = req.body.tags.split(',').map(tag => tag.trim()).slice(0, 5);
   try {
     let coverUrl;

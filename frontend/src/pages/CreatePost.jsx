@@ -15,6 +15,7 @@ export default function CreatePost() {
   const [previewUrl, setPreviewUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [redirect, setRedirect] = useState(false);
+  const [tags, setTags] = useState([]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -50,27 +51,17 @@ export default function CreatePost() {
   const handleAddTag = (tagValue) => {
     if (tagValue) {
       // Split the input by commas and trim whitespace
-      // Split the input by commas and trim whitespace
       const newTags = tagValue.split(",").map((tag) => tag.trim());
 
       // Filter out empty strings and add only unique tags
-      const uniqueNewTags = newTags.filter((tag) => tag && !formData.tags.includes(tag));
+      const uniqueNewTags = newTags.filter((tag) => tag && !tags.includes(tag));
 
-      // Limit total tags to 4
-      const updatedTags = [...formData.tags, ...uniqueNewTags].slice(0, 4);
-
-      setFormData((prevState) => ({
-        ...prevState,
-        tags: updatedTags,
-      }));
+      setTags([...tags, ...uniqueNewTags]);
     }
   };
 
   const handleDeleteTag = (tagToDelete) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      tags: prevState.tags.filter((tag) => tag !== tagToDelete),
-    }));
+    setTags(tags.filter((tag) => tag !== tagToDelete));
   };
   const createNewPost = async (ev) => {
     ev.preventDefault();
@@ -92,7 +83,7 @@ export default function CreatePost() {
     // Handle tags separately to ensure they're sent as JSON string
     const formDataToSend = {
       ...formData,
-      tags: formData.tags
+      tags: tags
     };
     
     Object.keys(formDataToSend).forEach((key) => {
@@ -100,7 +91,7 @@ export default function CreatePost() {
     });
     data.set("summary", summary);
     data.set("file", files);
-
+    
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
@@ -135,6 +126,7 @@ export default function CreatePost() {
   if (redirect) {
     return <Navigate to="/" />;
   }
+
 
   return (
     <div className="flex flex-col gap-4 justify-around lg:flex-row md:flex-row max-w-7xl mx-auto ">
@@ -199,7 +191,7 @@ export default function CreatePost() {
 
           {/* Tags Section */}
           <div className="flex flex-wrap gap-2 mb-6">
-            {formData.tags.map((tag, index) => (
+            {tags.map((tag, index) => (
               <div
                 key={index}
                 className="flex items-center bg-gray-100 rounded-md px-2 py-1"
